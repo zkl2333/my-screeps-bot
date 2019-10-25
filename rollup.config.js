@@ -15,18 +15,16 @@ if (!dest) {
 }
 
 export default {
-  input: "src/main.ts",
-  output: {
-    file: "dist/main.js",
-    format: "cjs",
-    sourcemap: true
-  },
+  input: "src/main.js",
+  output: { exports: "named", file: "dist/main.js", format: "cjs", sourcemap: true },
 
   plugins: [
     clear({ targets: ["dist"] }),
-    resolve(),
-    commonjs(),
-    typescript({tsconfig: "./tsconfig.json"}),
-    screeps({config: cfg, dryRun: cfg == null})
+    resolve({ preferBuiltins: true }),
+    commonjs({
+      // include: 'src/**',  // Default: undefined
+    }),
+    typescript({ tsconfig: "./tsconfig.json" }),
+    screeps({ config: cfg, dryRun: cfg == null })
   ]
-}
+};
