@@ -10,11 +10,11 @@ import roleRepairer from "./rolo/role.repairer";
 // let roleBuilder = require("./rolo/role.builder1");
 // let roleRepairer = require("./rolo/role.repairer");
 
-// let Traveler = require("Traveler")
+import "./utils/Traveler"
 // import roleRepairer from "role.repairer"
 // let Tasks = require('creep-tasks')
 
-import cleanMemory from "./utils/clean-memory"
+import cleanMemory from "./utils/clean-memory";
 
 let home = Game.spawns[Object.keys(Game.spawns)[0]];
 
