@@ -39,7 +39,7 @@ var roleHarvester = {
                         )
                     }
                 })
-                target = creep.pos.findClosestByPath(targets)
+                let target = creep.pos.findClosestByPath(targets)
                     if(target){
                     creep.memory.targetId = target.id
                     creep.say("转移物资")
