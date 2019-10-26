@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "tslint -p tsconfig.json \"src/**/*.ts\"",
     "build": "rollup -c",
-    "local": "rollup -c && cp ./dist/* C:\\Users\\zkl23\\AppData\\Local\\Screeps\\scripts\\127_0_0_1___21025\\default\\",
+    "local": "rollup -c && cp -r ./dist/* C:\\Users\\zkl23\\AppData\\Local\\Screeps\\scripts\\127_0_0_1___21025\\default\\",
     "push-main": "rollup -c --environment DEST:main",
     "push-pserver": "rollup -c --environment DEST:pserver",
     "push-sim": "rollup -c --environment DEST:sim",
