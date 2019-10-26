@@ -3,13 +3,13 @@ const config: any = {
     harvester: {
       WorkType: "harvester",
       lable: "W",
-      PlanNumber: 4,
+      PlanNumber: 2,
       body: [WORK, CARRY, MOVE]
     },
     builder: {
       WorkType: "builder",
       lable: "Z",
-      PlanNumber: 4,
+      PlanNumber: 2,
       body: [WORK, CARRY, CARRY, MOVE]
     },
     upgrader: {
@@ -23,6 +23,18 @@ const config: any = {
       lable: "X",
       PlanNumber: 2,
       body: [WORK, CARRY, MOVE]
+    },
+    miner: {
+      WorkType: "miner",
+      lable: "M",
+      PlanNumber: 2,
+      body: [WORK, CARRY, MOVE]
+    },
+    transporter: {
+      WorkType: "transporter",
+      lable: "T",
+      PlanNumber: 2,
+      body: [CARRY, MOVE, CARRY, MOVE]
     }
   },
   allPlanNum: function() {

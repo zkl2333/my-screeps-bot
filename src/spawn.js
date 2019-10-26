@@ -24,7 +24,7 @@ Spawn.prototype.mainSpawn = function(taskName) {
   if (!this.memory.spawnList) {
     this.memory.spawnList = [];
   }
-  let harvesters = _.filter(Game.creeps, creep => creep.memory.role == "harvester");
+  let harvesters = _.filter(Game.creeps, creep => creep.memory.role == "harvester" || creep.memory.role == "miner");
   if (harvesters.length < 1) {
     console.log(harvesters.length,"紧急模式");
     this.memory.spawnList.sort((a, b) => {

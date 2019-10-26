@@ -1,27 +1,28 @@
+import config from "../config";
 const util = {
-    ClosestTarget: function(self, Targets) {
-        let closestI = 0
-        if (Targets.length > 1) {
-            let tarr = []
-            for (let i = 0; i < Targets.length; i++) {
-                // let distance = Math.sqrt(
-                //     Math.abs(
-                //         Math.pow(Targets[i].pos.x - Targets[i].pos.y, 2)
-                //     ) +
-                //     Math.abs(
-                //         Math.pow(self.pos.x - self.pos.y, 2)
-                //     )
-                // )
-
-                tarr[i] = self.pos.findPathTo(Targets[i]).length
-            }
-            closestI = tarr.indexOf(Math.min(...tarr))
-            // if (self.memory.building) {
-            //     // console.log(closestI,tarr[closestI],...tarr)
-            // }
+  creepsArray: _.values(Game.creeps),
+  spawnsArray: _.values(Game.spawns),
+  HowManyCreep: function HowManyCreep(WorkType) {
+    let creeps = _.filter(Game.creeps, creep => creep.memory.role == WorkType);
+    return creeps.length;
+  },
+  // 检查creeps数量
+  checkCreeps: function checkCreeps() {
+    if (this.spawnsArray[0].memory.spawnList.length < 3) {
+      for (let k in config.worker) {
+        let worker = config.worker[k];
+        worker.realNumber =
+          util.HowManyCreep(worker.WorkType) +
+          _.filter(this.spawnsArray[0].memory.spawnList, spawnTaks => spawnTaks == worker.WorkType).length;
+        if (worker.realNumber < worker.PlanNumber) {
+          // 推产卵任务到母巢
+          // todo：动态数量控制
+          console.log("推产卵任务到母巢", worker.WorkType);
+          this.spawnsArray[0].addTask(worker.WorkType);
         }
-        return Targets[closestI]
+      }
     }
-}
+  }
+};
 
-module.exports = util
+export default util;
