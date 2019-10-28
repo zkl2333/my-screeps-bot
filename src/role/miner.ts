@@ -1,4 +1,5 @@
-import Tasks from "creep-tasks";
+// import Tasks from "../lib/creep-tasks";
+import Tasks from "../lib/creep-tasks/index";
 export class roleMiner {
   /** @param creep 分配任务*/
   static newTask(creep: Creep): void {
@@ -11,14 +12,16 @@ export class roleMiner {
       } else {
         creep.task = Tasks.harvest(sources[0]);
       }
-    } else if ( // 如果没有搬运者，就自己回家
+    } else if (
+      // 如果没有搬运者，就自己回家
       _.filter(Game.creeps, creep => {
         creep.memory.role == "transporter";
       }).length > 0
     ) {
       let spawn = Game.spawns[creep.room.name];
       creep.task = Tasks.transfer(spawn);
-    } else { // 如果有搬运者,丢在地上
+    } else {
+      // 如果有搬运者,丢在地上
       creep.task = Tasks.drop(creep.pos, RESOURCE_ENERGY);
     }
   }
@@ -28,6 +31,7 @@ export class roleMiner {
     if (creep.isIdle) {
       this.newTask(creep);
     }
+    creep.drop(RESOURCE_ENERGY);
     // 分配并执行任务
     creep.run();
   }

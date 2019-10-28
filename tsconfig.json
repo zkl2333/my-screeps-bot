@@ -15,6 +15,7 @@
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
     "noImplicitThis": false,
+    "keyofStringsOnly": true,
     "removeComments": false
   },
   "exclude": [

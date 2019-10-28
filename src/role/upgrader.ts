@@ -1,21 +1,34 @@
-import Tasks from "creep-tasks";
+import Tasks from "../lib/creep-tasks/index";
 export class RoleUpgrader {
   /** @param creep 分配任务*/
   static newTask(creep: Creep): void {
     // 如果有一个空来源，则从一个空来源中收获，否则选择任何一个来源
     if (creep.carry.energy < creep.carryCapacity) {
-      let sources = creep.room.find(FIND_DROPPED_RESOURCES);
-      if (creep.carry.energy < creep.carryCapacity || sources.length > 0) {
-        // 如果有一个空来源，则从一个空来源中收获，否则选择任何一个来源
-        let unattendedSource = _.filter(sources, source => source.targetedBy.length == 0)[0];
-        if (unattendedSource) {
-          creep.task = Tasks.pickup(unattendedSource);
-        } else {
-          creep.task = Tasks.pickup(sources[0]);
+      let targets: any = creep.room.find(FIND_STRUCTURES, {
+        filter: (structure: any) => {
+          return (
+            (structure.structureType == STRUCTURE_EXTENSION ||
+              structure.structureType == STRUCTURE_SPAWN ||
+              structure.structureType == STRUCTURE_CONTAINER ||
+              structure.structureType == STRUCTURE_TOWER) &&
+            structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0
+          );
         }
-      }
+      });
+      let target: any = creep.pos.findClosestByPath(targets);
+      creep.task = Tasks.withdraw(target);
+      // let sources = creep.room.find(FIND_DROPPED_RESOURCES);
+      // if (creep.carry.energy < creep.carryCapacity && sources.length > 0) {
+      //   // 如果有一个空来源，则从一个空来源中收获，否则选择任何一个来源
+      //   let unattendedSource = _.filter(sources, source => source.targetedBy.length == 0)[0];
+      //   if (unattendedSource) {
+      //     creep.task = Tasks.pickup(unattendedSource);
+      //   } else {
+      //     creep.task = Tasks.pickup(sources[0]);
+      //   }
+      // }
     } else {
-      creep.task = Tasks.upgrade(creep.room.controller!);
+      creep.task = Tasks.upgrade(creep.room.controller as any);
     }
   }
   /** @param creep 分配并执行任务*/
