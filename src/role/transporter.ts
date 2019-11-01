@@ -1,5 +1,5 @@
 import Tasks from "../lib/creep-tasks/index";
-import utils from "../utils/util"
+import utils from "../utils/util";
 export class roleTransporter {
   /**
    *
@@ -7,18 +7,34 @@ export class roleTransporter {
    */
   static newTask(creep: Creep): void {
     let sources = creep.room.find(FIND_DROPPED_RESOURCES);
-    let getTarget = utils.findCanGetEnergyStructure(creep)
+    let getTarget: any = utils.findCanGetEnergyStructure(creep);
     let saveTarget = utils.findCanSaveEnergyStructure(creep);
-    if (creep.carry.energy == 0 && sources.length > 0) {
+    // 提取
+    if (creep.carry.energy == 0) {
       let source = _.filter(sources, source => source.targetedBy.length == 0)[0];
-      if (source) {
+      // let source = sources[0]
+      let rains: any = creep.room.find(FIND_RUINS, {
+        filter: rain => {
+          return rain.store.getUsedCapacity(RESOURCE_ENERGY);
+        }
+      });
+      let rain:any = creep.pos.findClosestByPath(rains)
+      if (rain) {
+        creep.task = Tasks.withdraw(rain);
+      } else if (source) {
         creep.task = Tasks.pickup(source);
       } else if (getTarget) {
+        // } else if (getTarget && getTarget.store.getUsedCapacity(RESOURCE_ENERGY) > 1000) {
         creep.task = Tasks.withdraw(getTarget);
+      } else if ((_.values(Game.spawns)[0] as any).room == creep.room.name) {
+        creep.task = Tasks.goToRoom((_.values(Game.spawns)[0] as any).room);
       }
+      // 储存
     } else {
-      if(saveTarget){
+      if (saveTarget) {
         creep.task = Tasks.transfer(saveTarget);
+      } else {
+        creep.task = Tasks.goToRoom((_.values(Game.spawns)[0] as StructureSpawn).room.name);
       }
     }
   }

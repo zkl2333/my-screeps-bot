@@ -173,15 +173,15 @@ class Task {
         if (this.options.moveOptions && !this.options.moveOptions.range) {
             this.options.moveOptions.range = range;
         }
-        return this.creep.moveTo(this.targetPos, this.options.moveOptions);
-        // return this.creep.travelTo(this.targetPos, this.options.moveOptions); // <- switch if you use Traveler
+        // return this.creep.moveTo(this.targetPos, this.options.moveOptions);
+        return this.creep.travelTo(this.targetPos, this.options.moveOptions); // <- switch if you use Traveler
     }
     /* Moves to the next position on the agenda if specified - call this in some tasks after work() is completed */
     moveToNextPos() {
         if (this.options.nextPos) {
             let nextPos = helpers_1.derefRoomPosition(this.options.nextPos);
-            return this.creep.moveTo(nextPos);
-            // return this.creep.travelTo(nextPos); // <- switch if you use Traveler
+            // return this.creep.moveTo(nextPos);
+            return this.creep.travelTo(nextPos); // <- switch if you use Traveler
         }
     }
     // Return expected number of ticks until creep arrives at its first destination; this requires Traveler to work!

@@ -1,3 +1,4 @@
+import utils from "../utils/util";
 var roleHarvester = {
   /** @param {Creep} creep **/
   run: function(creep) {
@@ -13,6 +14,15 @@ var roleHarvester = {
           creep.memory.work = "pickup";
           creep.memory.targetId = target.id;
           creep.say("拾取物资");
+        } else if (_.filter(Game.creeps, creep => creep.memory.role == "miner").length > 0) {
+          creep.memory.work = "transfer";
+          let saveTarget = utils.findCanSaveEnergyStructure(creep);
+          if (saveTarget) {
+            creep.memory.targetId = saveTarget.id;
+            creep.say("转移物资");
+          } else {
+            creep.memory.work = undefined;
+          }
         } else {
           // 挖矿
           creep.memory.work = "harvest";
@@ -25,19 +35,9 @@ var roleHarvester = {
       } else {
         // 搬运
         creep.memory.work = "transfer";
-        let targets = creep.room.find(FIND_STRUCTURES, {
-          filter: structure => {
-            return (
-              (structure.structureType == STRUCTURE_EXTENSION ||
-                structure.structureType == STRUCTURE_SPAWN ||
-                structure.structureType == STRUCTURE_TOWER) &&
-              structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0
-            );
-          }
-        });
-        let target = creep.pos.findClosestByPath(targets);
-        if (target) {
-          creep.memory.targetId = target.id;
+        let saveTarget = utils.findCanSaveEnergyStructure(creep);
+        if (saveTarget) {
+          creep.memory.targetId = saveTarget.id;
           creep.say("转移物资");
         } else {
           creep.memory.work = undefined;
@@ -78,4 +78,4 @@ var roleHarvester = {
   }
 };
 
-module.exports = roleHarvester;
+export default roleHarvester;

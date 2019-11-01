@@ -1,3 +1,4 @@
+// import "./spawn";
 import config from "../config";
 class util {
   // creepsArray: _.values(Game.creeps),
@@ -8,13 +9,31 @@ class util {
   }
   // 检查creeps数量
   static checkCreeps(spawn: StructureSpawn) {
-    if (!spawn.memory.spawnList || spawn.memory.spawnList.length < 3) {
+    let m = _.filter(Game.creeps, creep => creep.memory.role == "miner");
+    let t = _.filter(Game.creeps, creep => creep.memory.role == "transporter");
+    if (m.length < 1 || t.length < 3) {
+      console.log("M:", m.length, "T", t.length);
+      if (!Memory.j) {
+        spawn.memory.spawnList = [];
+      }
+      Memory.j = true;
+      console.log("紧急模式");
+      if (m.length < 1) {
+        spawn.addTask("miner");
+      }
+      if (t.length < 3) {
+        spawn.addTask("transporter");
+      }
+    } else if (spawn.memory.spawnList.length < 5) {
+      Memory.j = false;
       for (let k in config.worker) {
         let worker = config.worker[k];
         if (worker.WorkType == "builder") {
           let targets = spawn.pos.findInRange(FIND_CONSTRUCTION_SITES, 15);
           if (targets.length == 0) {
-            spawn.memory.spawnList.splice(spawn.memory.spawnList.indexOf("builder"), 1);
+            if (spawn.memory.spawnList.indexOf("builder") >= 0) {
+              spawn.memory.spawnList.splice(spawn.memory.spawnList.indexOf("builder"), 1);
+            }
             break;
           }
         }
@@ -46,7 +65,7 @@ class util {
     if (methods == "save") {
       arr = _.filter(_.values(structures), target => target.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
     } else if (methods == "get") {
-      arr = _.filter(_.values(structures), target => target.store.getUsedCapacity(RESOURCE_ENERGY) == 0);
+      arr = _.filter(_.values(structures), target => target.store.getUsedCapacity(RESOURCE_ENERGY) > 0);
     }
     let extension: StructureExtension[] = [];
     let spawn: StructureSpawn[] = [];
@@ -81,10 +100,8 @@ class util {
    */
   static findCanSaveEnergyStructure(creep: Creep) {
     let targets = this.findEnergyStructures(creep, "save");
-    if (targets.extension.length > 0) {
-      return creep.pos.findClosestByPath(targets.extension);
-    } else if (targets.spawn.length > 0) {
-      return creep.pos.findClosestByPath(targets.spawn);
+    if (targets.extension.length > 0 || targets.spawn.length > 0) {
+      return creep.pos.findClosestByPath([...targets.extension, ...targets.spawn]);
     } else if (targets.tower.length > 0) {
       return creep.pos.findClosestByPath(targets.tower);
     } else if (targets.contatner.length > 0) {
@@ -100,14 +117,13 @@ class util {
    */
   static findCanGetEnergyStructure(creep: Creep) {
     let targets = this.findEnergyStructures(creep, "get");
+    // if (targets.contatner.length > 0) {
+    //   return creep.pos.findClosestByPath(targets.contatner);
+    // } else
     if (targets.store.length > 0) {
       return creep.pos.findClosestByPath(targets.store);
-    } else if (targets.contatner.length > 0) {
-      return creep.pos.findClosestByPath(targets.contatner);
     } else if (targets.spawn.length > 0) {
       return creep.pos.findClosestByPath(targets.spawn);
-    } else if (targets.extension.length > 0) {
-      return creep.pos.findClosestByPath(targets.extension);
     } else {
       return null;
     }

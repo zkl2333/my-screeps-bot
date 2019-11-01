@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const initializer_1 = require("./utilities/initializer");
 const caching_1 = require("./utilities/caching");
-Object.defineProperty(Creep.prototype, 'task', {
+Object.defineProperty(Creep.prototype, "task", {
     get() {
         if (!this._task) {
             let protoTask = this.memory.task;
@@ -94,18 +94,20 @@ Object.defineProperty(RoomPosition.prototype, 'neighbors', {
 });
 RoomPosition.prototype.isPassible = function (ignoreCreeps = false) {
     // Is terrain passable?
-    if (Game.map.getTerrainAt(this) == 'wall')
+    if (Game.map.getRoomTerrain(this.roomName).get(this.x, this.y) == TERRAIN_MASK_WALL) {
         return false;
+    }
     if (this.isVisible) {
         // Are there creeps?
         if (ignoreCreeps == false && this.lookFor(LOOK_CREEPS).length > 0)
             return false;
         // Are there structures?
         let impassibleStructures = _.filter(this.lookFor(LOOK_STRUCTURES), function (s) {
-            return this.structureType != STRUCTURE_ROAD &&
+            return (this.structureType != STRUCTURE_ROAD &&
                 s.structureType != STRUCTURE_CONTAINER &&
-                !(s.structureType == STRUCTURE_RAMPART && (s.my ||
-                    s.isPublic));
+                !(s.structureType == STRUCTURE_RAMPART &&
+                    (s.my ||
+                        s.isPublic)));
         });
         return impassibleStructures.length == 0;
     }

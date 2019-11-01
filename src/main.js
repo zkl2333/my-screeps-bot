@@ -3,7 +3,7 @@ import { ErrorMapper } from "utils/ErrorMapper";
 
 import roleHarvester from "./role/role.harvester1";
 import roleUpgrader from "./role/upgrader";
-import roleBuilder from "./role/role.builder1";
+import roleBuilder from "./role/builder";
 import roleRepairer from "./role/repairer";
 import roleMiner from "./role/miner";
 import roleTransporter from "./role/transporter";
@@ -31,7 +31,7 @@ function defendRoom(roomName) {
     filter: { structureType: STRUCTURE_TOWER }
   });
   let targets = Game.rooms[roomName].find(FIND_STRUCTURES, {
-    filter: object => object.hits / object.hitsMax < 0.0001
+    filter: object => object.hits / object.hitsMax < 0.1 && object.hits < 2000
   });
   if (hostiles.length > 0) {
     var username = hostiles[0].owner.username;
@@ -55,19 +55,23 @@ module.exports.loop = ErrorMapper.wrapLoop(() => {
         spawn.memory.spawnList = [];
       }
       spawn.work();
-      util.checkCreeps(spawn);
+      try {
+        util.checkCreeps(spawn);
+      } catch (error) {
+        console.log("检查异常", error);
+      }
     });
-    defendRoom(spawnsArray[0].room.name);
   }
+  defendRoom(spawnsArray[0].room.name);
 
   // 清理内存
   cleanMemory.cleanDeadCreeps();
-  if (creepsArray.length > 3) {
+  if (!Memory.j) {
     for (let name in Game.creeps) {
       let creep = Game.creeps[name];
       creep.work();
       try {
-        if (creep.memory.role == "harvester") {
+        if (creep.memory.role == "harvester" || creep.name.includes("worker")) {
           roleHarvester.run(creep);
         }
         if (creep.memory.role == "upgrader") {
@@ -79,20 +83,22 @@ module.exports.loop = ErrorMapper.wrapLoop(() => {
         if (creep.memory.role == "repairer") {
           roleRepairer.run(creep);
         }
-        if (creep.memory.role == "miner") {
+        if (creep.memory.role == "miner" || creep.name.includes("drone")) {
           roleMiner.run(creep);
         }
-        if (creep.memory.role == "transporter") {
+        if (creep.memory.role == "transporter" || creep.name.includes("transport")) {
           roleTransporter.run(creep);
         }
       } catch (error) {
-        // creep.task.finish();
+        creep.task = null;
         console.log(creep, error);
       }
     }
   } else {
-    console.log("紧急模式！！creep不足，除'miner、'transporter'全部转化为'harvester'挖矿恢复生产");
+    if (Game.time % 10 == 0)
+      console.log("紧急模式！！creep不足，除'miner、'transporter'全部转化为'harvester'挖矿恢复生产");
     for (let creep of creepsArray) {
+      creep.work();
       if (
         creep.memory.role == "harvester" ||
         creep.memory.role == "upgrader" ||
