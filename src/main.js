@@ -46,10 +46,11 @@ function defendRoom(roomName) {
 
 module.exports.loop = ErrorMapper.wrapLoop(() => {
   try {
-    const linkFrom = Game.rooms["E19N28"].lookForAt("structure", 30, 43)[0];
-
-    const linkTo = linkFrom.pos.find(FIND_MY_STRUCTURES, { filter: { structureType: STRUCTURE_LINK } })[0];
-    linkFrom.transferEnergy(linkTo);
+    let from = Game.getObjectById("5dbe396fcb737bb5ed0f5721");
+    let to = Game.getObjectById("5dbee82872e2a74b5a8237d4");
+    if (from.store.getFreeCapacity() == 0 && to.store.getUsedCapacity() == 0) {
+      from.transferEnergy(to);
+    }
   } catch (error) {
     console.log(error);
   }
