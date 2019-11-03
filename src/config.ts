@@ -1,5 +1,14 @@
 const config: any = {
   worker: {
+    cleaner: {
+      WorkType: "cleaner",
+      lable: "C",
+      PlanNumber: 2,
+      baseEnergy: 100,
+      baseBody: [CARRY, MOVE],
+      ComponentEnergy: 100,
+      Component: [CARRY, MOVE]
+    },
     harvester: {
       WorkType: "harvester",
       lable: "W",

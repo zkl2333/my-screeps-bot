@@ -7,6 +7,7 @@ import roleBuilder from "./role/builder";
 import roleRepairer from "./role/repairer";
 import roleMiner from "./role/miner";
 import roleTransporter from "./role/transporter";
+import cleaner from "./role/cleaner";
 
 import "./creep";
 import "./spawn";
@@ -89,6 +90,9 @@ module.exports.loop = ErrorMapper.wrapLoop(() => {
         }
         if (creep.memory.role == "transporter" || creep.name.includes("transport")) {
           roleTransporter.run(creep);
+        }
+        if (creep.memory.role == "cleaner") {
+          cleaner.run(creep);
         }
       } catch (error) {
         creep.task = null;

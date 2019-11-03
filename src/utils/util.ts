@@ -11,7 +11,7 @@ class util {
   static checkCreeps(spawn: StructureSpawn) {
     let m = _.filter(Game.creeps, creep => creep.memory.role == "miner");
     let t = _.filter(Game.creeps, creep => creep.memory.role == "transporter");
-    if (m.length < 1 || t.length < 3) {
+    if (m.length < 1 || t.length < 2) {
       console.log("M:", m.length, "T", t.length);
       if (!Memory.j) {
         spawn.memory.spawnList = [];
@@ -34,7 +34,7 @@ class util {
             if (spawn.memory.spawnList.indexOf("builder") >= 0) {
               spawn.memory.spawnList.splice(spawn.memory.spawnList.indexOf("builder"), 1);
             }
-            break;
+            continue;
           }
         }
         worker.realNumber =

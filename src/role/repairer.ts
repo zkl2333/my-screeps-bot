@@ -13,7 +13,11 @@ export class roleRepairer {
       // 工作
       const targets = creep.room.find(FIND_STRUCTURES, {
         filter: object => {
-          return object.hits < object.hitsMax && object.structureType !== STRUCTURE_WALL;
+          return (
+            object.hits < object.hitsMax &&
+            object.structureType !== STRUCTURE_WALL &&
+            object.structureType !== STRUCTURE_RAMPART
+          );
         }
       });
       // console.log(targets);

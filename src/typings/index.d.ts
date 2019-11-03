@@ -19,5 +19,4 @@ interface StructureSpawn {
   addTask(type: string): void;
   work(): void;
   mainSpawn(taskName: string): boolean;
-  store: any;
 }
