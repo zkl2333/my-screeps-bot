@@ -15,15 +15,15 @@ class util {
       console.log("M:", m.length, "T", t.length);
       if (!Memory.j) {
         spawn.memory.spawnList = [];
+        if (m.length < 1) {
+          for (let i = 0; i <= 1 - m.length; i++) spawn.addTask("miner");
+        }
+        if (t.length < 3) {
+          for (let i = 0; i <= 3 - t.length; i++) spawn.addTask("transporter");
+        }
       }
       Memory.j = true;
       console.log("紧急模式");
-      if (m.length < 1) {
-        spawn.addTask("miner");
-      }
-      if (t.length < 3) {
-        spawn.addTask("transporter");
-      }
     } else if (spawn.memory.spawnList.length < 5) {
       Memory.j = false;
       for (let k in config.worker) {
@@ -117,10 +117,9 @@ class util {
    */
   static findCanGetEnergyStructure(creep: Creep) {
     let targets = this.findEnergyStructures(creep, "get");
-    // if (targets.contatner.length > 0) {
-    //   return creep.pos.findClosestByPath(targets.contatner);
-    // } else
-    if (targets.store.length > 0) {
+    if (targets.contatner.length > 0) {
+      return creep.pos.findClosestByPath(targets.contatner);
+    } else if (targets.store.length > 0) {
       return creep.pos.findClosestByPath(targets.store);
     } else if (targets.spawn.length > 0) {
       return creep.pos.findClosestByPath(targets.spawn);

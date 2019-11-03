@@ -4,6 +4,11 @@ export class RoleUpgrader {
   static newTask(creep: Creep): void {
     // 如果有一个空来源，则从一个空来源中收获，否则选择任何一个来源
     if (creep.carry.energy < creep.carryCapacity) {
+      let rains: any = creep.room.find(FIND_RUINS, {
+        filter: rain => {
+          return rain.store.getUsedCapacity(RESOURCE_ENERGY);
+        }
+      });
       let targets: any = creep.room.find(FIND_STRUCTURES, {
         filter: (structure: any) => {
           return (
@@ -15,7 +20,7 @@ export class RoleUpgrader {
           );
         }
       });
-      let target: any = creep.pos.findClosestByPath(targets);
+      let target: any = creep.pos.findClosestByPath([...targets,...rains]);
       creep.task = Tasks.withdraw(target);
       // let sources = creep.room.find(FIND_DROPPED_RESOURCES);
       // if (creep.carry.energy < creep.carryCapacity && sources.length > 0) {

@@ -8,7 +8,7 @@ Creep.prototype.work = function() {
       // 向指定 spawn 推送生成任务,孵化接班人
       this.say("rua~");
       let spawn = Game.getObjectById(this.memory.home) || Game.spawns["First"];
-      spawn.addTask(this.memory.role);
+      // spawn.addTask(this.memory.role);
       this.memory.hasSendRebirth = true;
     }
   } else {

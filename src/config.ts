@@ -12,7 +12,7 @@ const config: any = {
     builder: {
       WorkType: "builder",
       lable: "Z",
-      PlanNumber: 4,
+      PlanNumber: 2,
       baseEnergy: 200,
       baseBody: [WORK, CARRY, MOVE],
       ComponentEnergy: 200,
@@ -21,7 +21,7 @@ const config: any = {
     upgrader: {
       WorkType: "upgrader",
       lable: "S",
-      PlanNumber: 4,
+      PlanNumber: 2,
       baseEnergy: 200,
       baseBody: [WORK, CARRY, MOVE],
       ComponentEnergy: 200,
@@ -48,7 +48,7 @@ const config: any = {
     transporter: {
       WorkType: "transporter",
       lable: "T",
-      PlanNumber: 4,
+      PlanNumber: 3,
       baseEnergy: 100,
       baseBody: [CARRY, MOVE],
       ComponentEnergy: 100,

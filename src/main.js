@@ -75,6 +75,7 @@ module.exports.loop = ErrorMapper.wrapLoop(() => {
           roleHarvester.run(creep);
         }
         if (creep.memory.role == "upgrader") {
+          // roleBuilder.run(creep);
           roleUpgrader.run(creep);
         }
         if (creep.memory.role == "builder") {
