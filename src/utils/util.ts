@@ -57,7 +57,8 @@ class util {
           structure.structureType == STRUCTURE_SPAWN ||
           structure.structureType == STRUCTURE_CONTAINER ||
           structure.structureType == STRUCTURE_TOWER ||
-          structure.structureType == STRUCTURE_STORAGE
+          structure.structureType == STRUCTURE_STORAGE ||
+          structure.structureType == STRUCTURE_LINK
         );
       }
     });
@@ -72,6 +73,7 @@ class util {
     let contatner: StructureContainer[] = [];
     let store: StructureStorage[] = [];
     let tower: StructureTower[] = [];
+    let link: StructureLink[] = [];
     for (let i = 0; i < arr.length; i++) {
       let target = arr[i];
       if (target) {
@@ -90,9 +92,12 @@ class util {
         if (target.structureType == STRUCTURE_STORAGE) {
           store.push(target);
         }
+        if (target.structureType == STRUCTURE_LINK) {
+          store.push(target);
+        }
       }
     }
-    return { extension, spawn, contatner, store, tower };
+    return { extension, spawn, contatner, store, tower, link };
   }
   /**
    *  按优先级查早储存点
@@ -101,7 +106,7 @@ class util {
   static findCanSaveEnergyStructure(creep: Creep) {
     let targets = this.findEnergyStructures(creep, "save");
     if (targets.extension.length > 0 || targets.spawn.length > 0) {
-      return creep.pos.findClosestByPath([...targets.extension, ...targets.spawn]);
+      return creep.pos.findClosestByPath([...targets.extension, ...targets.spawn, ...targets.link]);
     } else if (targets.tower.length > 0) {
       return creep.pos.findClosestByPath(targets.tower);
     } else if (targets.contatner.length > 0) {

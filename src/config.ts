@@ -3,7 +3,7 @@ const config: any = {
     cleaner: {
       WorkType: "cleaner",
       lable: "C",
-      PlanNumber: 2,
+      PlanNumber: 0,
       baseEnergy: 100,
       baseBody: [CARRY, MOVE],
       ComponentEnergy: 100,
