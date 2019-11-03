@@ -16,10 +16,10 @@ class util {
       if (!Memory.j) {
         spawn.memory.spawnList = [];
         if (m.length < 1) {
-          for (let i = 0; i <= 1 - m.length; i++) spawn.addTask("miner");
+          for (let i = 0; i < 1 - m.length; i++) spawn.addTask("miner");
         }
         if (t.length < 3) {
-          for (let i = 0; i <= 3 - t.length; i++) spawn.addTask("transporter");
+          for (let i = 0; i < 3 - t.length; i++) spawn.addTask("transporter");
         }
       }
       Memory.j = true;
@@ -106,11 +106,11 @@ class util {
   static findCanSaveEnergyStructure(creep: Creep) {
     let targets = this.findEnergyStructures(creep, "save");
     if (targets.extension.length > 0 || targets.spawn.length > 0) {
-      return creep.pos.findClosestByPath([...targets.extension, ...targets.spawn, ...targets.link]);
+      return creep.pos.findClosestByPath([...targets.extension, ...targets.spawn]);
     } else if (targets.tower.length > 0) {
       return creep.pos.findClosestByPath(targets.tower);
     } else if (targets.contatner.length > 0) {
-      return creep.pos.findClosestByPath(targets.contatner);
+      return creep.pos.findClosestByPath([...targets.contatner, ...targets.link]);
     } else if (targets.store.length > 0) {
       return creep.pos.findClosestByPath(targets.store);
     } else {

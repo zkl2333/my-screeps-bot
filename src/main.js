@@ -45,6 +45,14 @@ function defendRoom(roomName) {
 }
 
 module.exports.loop = ErrorMapper.wrapLoop(() => {
+  try {
+    const linkFrom = Game.rooms["E19N28"].lookForAt("structure", 30, 43)[0];
+
+    const linkTo = linkFrom.pos.find(FIND_MY_STRUCTURES, { filter: { structureType: STRUCTURE_LINK } })[0];
+    linkFrom.transferEnergy(linkTo);
+  } catch (error) {
+    console.log(error);
+  }
   // const startCpu = Game.cpu.getUsed();
   // console.log("=========startLoop=========")
   let creepsArray = _.values(Game.creeps);

@@ -15,7 +15,7 @@ export class roleTransporter {
       // let source = sources[0]
       let rains: any = creep.room.find(FIND_RUINS, {
         filter: rain => {
-          return rain.store.getUsedCapacity(RESOURCE_ENERGY);
+          return rain.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
         }
       });
       rains = _.filter(rains, (rain: any) => rain.targetedBy.length == 0);
@@ -28,16 +28,28 @@ export class roleTransporter {
         // }
       } else if (rain) {
         creep.task = Tasks.withdraw(rain);
-      // } else if (getTarget) {
-      } else if (getTarget && getTarget.store.getUsedCapacity(RESOURCE_ENERGY) > 1000) {
+        // } else if (getTarget) {
+      } else if (getTarget && getTarget.store.getFreeCapacity() == 0) {
+        if (getTarget.structureType == STRUCTURE_CONTAINER) {
+          creep.memory.fromC = true;
+        }
         creep.task = Tasks.withdraw(getTarget);
       } else if ((_.values(Game.spawns)[0] as any).room == creep.room.name) {
         creep.task = Tasks.goToRoom((_.values(Game.spawns)[0] as any).room);
       }
       // 储存
     } else {
-      if (saveTarget) {
-        creep.task = Tasks.transfer(saveTarget);
+      if (saveTarget && getTarget.store.getFreeCapacity()) {
+        let storage:any = creep.room.find(FIND_STRUCTURES, {
+          filter: s => {
+            return s.structureType == STRUCTURE_STORAGE;
+          }
+        });
+        if (creep.memory.fromC && storage.length > 0) {
+          creep.memory.fromC = null;
+          saveTarget = storage[0];
+        }
+        creep.task = Tasks.transfer(saveTarget!);
       } else {
         creep.task = Tasks.goToRoom((_.values(Game.spawns)[0] as StructureSpawn).room.name);
       }

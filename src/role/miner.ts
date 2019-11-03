@@ -37,7 +37,8 @@ export class roleMiner {
           );
         }
       });
-      if (con.lenght > 0) {
+      if (con.length > 0 && con[0].store.getFreeCapacity()>0) {
+        creep.say(".")
         creep.task = Tasks.transfer(con[0]);
       } else {
         creep.task = Tasks.drop(creep.pos, RESOURCE_ENERGY);
